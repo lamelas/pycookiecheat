@@ -51,15 +51,16 @@ Rename some columns to match the Chrome cookie db row names.
 This makes the common.Cookie class simpler.
 """
 
-FIREFOX_OS_PROFILE_DIRS: dict[str, dict[str, str]] = {
+FIREFOX_OS_PROFILE_DIRS: dict[str, dict[str, list[str]]] = {
     "linux": {
-        BrowserType.FIREFOX: "~/.mozilla/firefox",
+        BrowserType.FIREFOX: ["~/.mozilla/firefox",
+                              "~/snap/firefox/common/.mozilla/firefox/"],
     },
     "macos": {
-        BrowserType.FIREFOX: "~/Library/Application Support/Firefox",
+        BrowserType.FIREFOX: ["~/Library/Application Support/Firefox"],
     },
     "windows": {
-        BrowserType.FIREFOX: "~/AppData/Roaming/Mozilla/Firefox/Profiles",
+        BrowserType.FIREFOX: ["~/AppData/Roaming/Mozilla/Firefox/Profiles"],
     },
 }
 
@@ -80,7 +81,14 @@ def _get_profiles_dir_for_os(
         raise ValueError(
             f"OS must be one of {list(FIREFOX_OS_PROFILE_DIRS.keys())}"
         )
-    return Path(os_config[browser]).expanduser()
+    
+    ff_path = Path()
+    for ff_dir in os_config[browser]:
+        ff_path = Path(ff_dir).expanduser()
+        if ff_path.exists():
+            break
+
+    return ff_path
 
 
 def _find_firefox_default_profile(firefox_dir: Path) -> str:
