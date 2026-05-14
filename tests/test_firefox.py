@@ -236,23 +236,30 @@ def set_cookie(profiles: Path, cookie_server: int) -> t.Iterator[None]:
 
 
 @pytest.mark.parametrize(
-    "os_name,expected_dir",
+    "os_name,expected_dirs",
     [
-        ("linux", "~/.mozilla/firefox"),
-        ("macos", "~/Library/Application Support/Firefox"),
-        ("windows", "~/AppData/Roaming/Mozilla/Firefox/Profiles"),
+        ("linux", ["~/snap/firefox/common/.mozilla/firefox/",
+                   "~/.mozilla/firefox"]),
+        ("macos", ["~/Library/Application Support/Firefox"]),
+        ("windows", ["~/AppData/Roaming/Mozilla/Firefox/Profiles"]),
     ],
 )
 def test_get_profiles_dir_for_os_valid(
-    os_name: str, expected_dir: str
+    os_name: str, expected_dirs: str
 ) -> None:
     """Test profile paths for each OS.
 
     Test only implicit "Firefox" default, since it's the only type we currently
     support.
     """
+    expected_path = Path()
+    for expected_dir in expected_dirs:
+        expected_path = Path(expected_dir).expanduser()
+        if expected_path.exists():
+            break
+
     profiles_dir = _get_profiles_dir_for_os(os_name, BrowserType.FIREFOX)
-    assert profiles_dir == Path(expected_dir).expanduser()
+    assert profiles_dir == expected_path
 
 
 def test_get_profiles_dir_for_os_invalid() -> None:

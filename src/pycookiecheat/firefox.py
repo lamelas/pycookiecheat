@@ -53,8 +53,8 @@ This makes the common.Cookie class simpler.
 
 FIREFOX_OS_PROFILE_DIRS: dict[str, dict[str, list[str]]] = {
     "linux": {
-        BrowserType.FIREFOX: ["~/.mozilla/firefox",
-                              "~/snap/firefox/common/.mozilla/firefox/"],
+        BrowserType.FIREFOX: ["~/snap/firefox/common/.mozilla/firefox/",
+                              "~/.mozilla/firefox"],
     },
     "macos": {
         BrowserType.FIREFOX: ["~/Library/Application Support/Firefox"],
