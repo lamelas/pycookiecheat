@@ -18,6 +18,11 @@ def _cli() -> argparse.ArgumentParser:
         "-b", "--browser", type=BrowserType, default=BrowserType.CHROME
     )
     parser.add_argument(
+        "-p",
+        "--profile",
+        help="Profile directory to use (ex. wsw3grhw.default)",
+    )
+    parser.add_argument(
         "-o",
         "--output-file",
         help="Output to this file in netscape cookie file format",
@@ -61,6 +66,7 @@ def main() -> None:
         browser=browser,
         curl_cookie_file=args.output_file,
         cookie_file=args.cookie_file,
+        profile_name=args.profile,
     )
     if not args.output_file:
         print(json.dumps(cookies, indent=4))
