@@ -53,8 +53,8 @@ This makes the common.Cookie class simpler.
 
 FIREFOX_OS_PROFILE_DIRS: dict[str, dict[str, list[str]]] = {
     "linux": {
-        BrowserType.FIREFOX: ["~/snap/firefox/common/.mozilla/firefox/",
-                              "~/.mozilla/firefox"],
+        BrowserType.FIREFOX: ["~/.mozilla/firefox",
+                              "~/snap/firefox/common/.mozilla/firefox/"],
     },
     "macos": {
         BrowserType.FIREFOX: ["~/Library/Application Support/Firefox"],
@@ -82,10 +82,10 @@ def _get_profiles_dir_for_os(
             f"OS must be one of {list(FIREFOX_OS_PROFILE_DIRS.keys())}"
         )
     
-    ff_path = Path()
+    ff_path = Path(os_config[browser][0]).expanduser()
     for ff_dir in os_config[browser]:
-        ff_path = Path(ff_dir).expanduser()
-        if ff_path.exists():
+        if Path(ff_dir).exists():
+            ff_path = Path(ff_dir).expanduser()
             break
 
     return ff_path
