@@ -69,7 +69,7 @@ def main() -> None:
         browser=browser,
         curl_cookie_file=args.output_file,
         cookie_file=args.cookie_file,
-        firefox_profile_name=args.profile,
+        firefox_profile_name=args.firefox_profile,
     )
     if not args.output_file:
         print(json.dumps(cookies, indent=4))
