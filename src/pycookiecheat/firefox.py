@@ -149,9 +149,10 @@ def _load_firefox_cookie_db(
     Args:
         profiles_dir: Browser+OS paths profiles_dir path
         tmp_dir: A temporary directory to copy the DB file(s) into
-        profile_name: Name (or glob pattern) of the Firefox profile to search
-                      for cookies -- if none given it will find the configured
-                      default profile
+        profile_name: Subdirectory name (or glob pattern) of the Firefox
+                      profile to search for cookies (e.g., ashu3ae.default) --
+                      if none given it will find the configured default profile.
+                      Unused for non-Firefox browsers
         cookie_file: optional custom path to a specific cookie file
     Returns:
         Path to the "deWAL'ed" temporary copy of cookies.sqlite
@@ -215,9 +216,10 @@ def firefox_cookies(
         as_cookies: Return `list[Cookie]` instead of `dict`
         cookie_file: path to alternate file to search for cookies
         curl_cookie_file: Path to save the cookie file to be used with cURL
-        profile_name: Name (or glob pattern) of the Firefox profile to search
-                      for cookies -- if none given it will find the configured
-                      default profile
+        profile_name: Subdirectory name (or glob pattern) of the Firefox
+                      profile to search for cookies (e.g., ashu3ae.default) --
+                      if none given it will find the configured default profile.
+                      Unused for non-Firefox browsers
     Returns:
         Dictionary of cookie values for URL
     """

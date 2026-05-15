@@ -340,7 +340,7 @@ def test_firefox_cookies(set_cookie: None) -> None:
     assert cookies == get_cookies(
         "http://localhost",
         browser=BrowserType.FIREFOX,
-        profile_name=TEST_PROFILE_DIR,
+        firefox_profile_name=TEST_PROFILE_DIR,
     )
 
 

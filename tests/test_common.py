@@ -63,9 +63,15 @@ def test_cli() -> None:
     args = _cli().parse_args(["https://n8henrie.com"])
     assert args.url == "https://n8henrie.com"
     assert args.browser == BrowserType.CHROME
+    assert args.firefox_profile is None
 
     args = _cli().parse_args(["github.com", "-vv"])
     assert args.verbose == 2
 
-    args = _cli().parse_args(["n8henrie.com", "--browser", "firefox"])
+    args = _cli().parse_args(["n8henrie.com",
+                              "--browser",
+                              "firefox",
+                              "--firefox-profile",
+                              "ssr3gryw.default"])
     assert args.browser == BrowserType.FIREFOX
+    assert args.firefox_profile == 'ssr3gryw.default'

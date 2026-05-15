@@ -19,8 +19,11 @@ def _cli() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "-p",
-        "--profile",
-        help="Profile directory to use (ex. wsw3grhw.default)",
+        "--firefox-profile",
+        help="Subdirectory name (or glob pattern) of the Firefox profile to "
+             "search for cookies (e.g., ashu3ae.default) -- if none given it "
+             "will find the configured default profile. Unused for non-Firefox "
+             "browsers",
     )
     parser.add_argument(
         "-o",
@@ -66,7 +69,7 @@ def main() -> None:
         browser=browser,
         curl_cookie_file=args.output_file,
         cookie_file=args.cookie_file,
-        profile_name=args.profile,
+        firefox_profile_name=args.profile,
     )
     if not args.output_file:
         print(json.dumps(cookies, indent=4))
