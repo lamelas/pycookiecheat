@@ -254,8 +254,9 @@ def test_get_profiles_dir_for_os_valid(
     """
     expected_path = Path(expected_dirs[0]).expanduser()
     for expected_dir in expected_dirs:
-        if Path(expected_dir).exists():
-            expected_path = Path(expected_dir).expanduser()
+        candidate = Path(expected_dir).expanduser()
+        if candidate.exists():
+            expected_path = candidate
             break
 
     profiles_dir = _get_profiles_dir_for_os(os_name, BrowserType.FIREFOX)

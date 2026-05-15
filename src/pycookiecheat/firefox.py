@@ -84,8 +84,9 @@ def _get_profiles_dir_for_os(
     
     ff_path = Path(os_config[browser][0]).expanduser()
     for ff_dir in os_config[browser]:
-        if Path(ff_dir).exists():
-            ff_path = Path(ff_dir).expanduser()
+        candidate = Path(ff_dir).expanduser()
+        if candidate.exists():
+            ff_path = candidate
             break
 
     return ff_path
