@@ -49,9 +49,8 @@ with a standalone console script:
 
 ```console
 $ python -m pycookiecheat --help
-usage: pycookiecheat [-h] [-b BROWSER] [-o OUTPUT_FILE] [-v] [-c COOKIE_FILE]
-                     [-V]
-                     url
+usage: pycookiecheat [-h] [-b BROWSER] [-p FIREFOX_PROFILE] [-o OUTPUT_FILE]
+                     [-v] [-c COOKIE_FILE] [-V] url
 
 Copy cookies from Chrome or Firefox and output as json
 
@@ -61,6 +60,12 @@ positional arguments:
 options:
   -h, --help            show this help message and exit
   -b BROWSER, --browser BROWSER
+  -p FIREFOX_PROFILE, --firefox-profile FIREFOX_PROFILE
+                        Subdirectory name (or glob pattern) of the Firefox
+                        profile to search for cookies (e.g.,
+                        ashu3ae.default) -- if none given it will find the
+                        configured default profile. Unused for non-Firefox
+                        browsers
   -o OUTPUT_FILE, --output-file OUTPUT_FILE
                         Output to this file in netscape cookie file format
   -v, --verbose         Increase logging verbosity (may repeat), default is
@@ -105,6 +110,28 @@ manually specifying something like
 - Optionally outputs cookies to file (thanks to Muntashir Al-Islam!)
 
 ## FAQ / Troubleshooting
+
+### How do I specify Firefox profiles?
+
+The profile argument (`--firefox-profile` in the CLI) specifies the profile in
+the Firefox profile directory to load from.
+
+For example, on Linux:
+```console
+$ ls ~/.mozilla/firefox
+'Profile Groups'   profiles.ini   wsw6frhw.default
+```
+
+You can specify `--firefox-profile=wsw6frhw.default`.
+
+Around 2025 Firefox added a new profile system that coexists with the old one.
+While the metadata for legacy profiles is in `PROFILE_DIR/profiles.ini`, to
+find the path for the new profiles you need to check `PROFILE_DIR/Profile\ Groups/*.sqlite`:
+
+```console
+$ sqlite3 ~/snap/firefox/common/.mozilla/firefox/Profile\ Groups/*.sqlite 'SELECT * FROM profiles;'
+1|wsw6frhw.default|Original profile|shopping|default-theme@mozilla.org|rgb(255,255,255)|rgb(28,27,34)
+```
 
 ### How about Windows?
 

@@ -154,7 +154,7 @@ def get_cookies(
     cookie_file: t.Optional[t.Union[str, Path]] = None,
     curl_cookie_file: t.Optional[str] = None,
     password: t.Optional[t.Union[bytes, str]] = None,
-    profile_name: t.Optional[str] = None,
+    firefox_profile_name: t.Optional[str] = None,
 ) -> t.Union[dict, list[Cookie]]:
     """Retrieve cookies from supported browsers on MacOS or Linux.
 
@@ -173,9 +173,11 @@ def get_cookies(
         cookie_file: path to alternate file to search for cookies
         curl_cookie_file: Path to save the cookie file to be used with cURL
         password: Optional system password. Unused for Firefox.
-        profile_name: Name (or glob pattern) of the Firefox profile to search
-                      for cookies -- if none given it will find the configured
-                      default profile. Unused for non-Firefox browsers.
+        firefox_profile_name: Subdirectory name (or glob pattern) of the
+                      Firefox profile to search for cookies (e.g.,
+                      ashu3ae.default) -- if none given it will find the
+                      configured default profile. Unused for non-Firefox
+                      browsers
     Returns:
         Dictionary of cookie values for URL
     """
@@ -186,7 +188,7 @@ def get_cookies(
             as_cookies=as_cookies,
             cookie_file=cookie_file,
             curl_cookie_file=curl_cookie_file,
-            profile_name=profile_name,
+            profile_name=firefox_profile_name,
         )
     else:
         cookies = pycookiecheat.chrome_cookies(

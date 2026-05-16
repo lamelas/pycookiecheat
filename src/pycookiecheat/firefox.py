@@ -51,15 +51,16 @@ Rename some columns to match the Chrome cookie db row names.
 This makes the common.Cookie class simpler.
 """
 
-FIREFOX_OS_PROFILE_DIRS: dict[str, dict[str, str]] = {
+FIREFOX_OS_PROFILE_DIRS: dict[str, dict[str, list[str]]] = {
     "linux": {
-        BrowserType.FIREFOX: "~/.mozilla/firefox",
+        BrowserType.FIREFOX: ["~/.mozilla/firefox",
+                              "~/snap/firefox/common/.mozilla/firefox/"],
     },
     "macos": {
-        BrowserType.FIREFOX: "~/Library/Application Support/Firefox",
+        BrowserType.FIREFOX: ["~/Library/Application Support/Firefox"],
     },
     "windows": {
-        BrowserType.FIREFOX: "~/AppData/Roaming/Mozilla/Firefox/Profiles",
+        BrowserType.FIREFOX: ["~/AppData/Roaming/Mozilla/Firefox/Profiles"],
     },
 }
 
@@ -80,7 +81,15 @@ def _get_profiles_dir_for_os(
         raise ValueError(
             f"OS must be one of {list(FIREFOX_OS_PROFILE_DIRS.keys())}"
         )
-    return Path(os_config[browser]).expanduser()
+    
+    ff_path = Path(os_config[browser][0]).expanduser()
+    for ff_dir in os_config[browser]:
+        candidate = Path(ff_dir).expanduser()
+        if candidate.exists():
+            ff_path = candidate
+            break
+
+    return ff_path
 
 
 def _find_firefox_default_profile(firefox_dir: Path) -> str:
@@ -141,9 +150,10 @@ def _load_firefox_cookie_db(
     Args:
         profiles_dir: Browser+OS paths profiles_dir path
         tmp_dir: A temporary directory to copy the DB file(s) into
-        profile_name: Name (or glob pattern) of the Firefox profile to search
-                      for cookies -- if none given it will find the configured
-                      default profile
+        profile_name: Subdirectory name (or glob pattern) of the Firefox
+                      profile to search for cookies (e.g., ashu3ae.default) --
+                      if none given it will find the configured default profile.
+                      Unused for non-Firefox browsers
         cookie_file: optional custom path to a specific cookie file
     Returns:
         Path to the "deWAL'ed" temporary copy of cookies.sqlite
@@ -207,9 +217,10 @@ def firefox_cookies(
         as_cookies: Return `list[Cookie]` instead of `dict`
         cookie_file: path to alternate file to search for cookies
         curl_cookie_file: Path to save the cookie file to be used with cURL
-        profile_name: Name (or glob pattern) of the Firefox profile to search
-                      for cookies -- if none given it will find the configured
-                      default profile
+        profile_name: Subdirectory name (or glob pattern) of the Firefox
+                      profile to search for cookies (e.g., ashu3ae.default) --
+                      if none given it will find the configured default profile.
+                      Unused for non-Firefox browsers
     Returns:
         Dictionary of cookie values for URL
     """
